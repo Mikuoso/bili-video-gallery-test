@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>B站UP主视频数据展示</title>
     <style>
         :root {
@@ -124,6 +125,17 @@
             width: 100%;
             height: 160px;
             object-fit: cover;
+            background-color: #f0f0f0; /* 添加背景色，避免图片加载时空白 */
+        }
+        
+        .no-cover {
+            width: 100%;
+            height: 160px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
         }
         
         .video-info {
@@ -372,8 +384,15 @@
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 
+                // 处理封面图片
+                let coverHtml = '';
+                if (video.cover_url) {
+                    coverHtml = `<img src="${video.cover_url}" alt="${video.title || '视频封面'}" class="video-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+                }
+                
                 card.innerHTML = `
-                    ${video.cover_url ? `<img src="${video.cover_url}" alt="${video.title || '视频封面'}" class="video-cover">` : ''}
+                    ${coverHtml}
+                    <div class="no-cover" style="${video.cover_url ? 'display: none;' : ''}">暂无封面</div>
                     <div class="video-info">
                         <div class="video-title">${video.title || '无标题'}</div>
                         <div class="video-meta">
